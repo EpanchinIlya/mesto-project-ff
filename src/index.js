@@ -9,20 +9,23 @@ import {
 import {
   openModal,
   closeModal,
-  addpopupCloseToEscEventListeners,
+  addPopupCloseToEscEventListeners,
 } from "./components/modal.js";
 
 //  DOM узлы
 
 const placesList = document.querySelector(".places__list");
-const popup_type_image = document.querySelector(".popup_type_image");
-const popup_type_image__caption =
-  popup_type_image.querySelector(".popup__caption");
-const popup_type_image__image = popup_type_image.querySelector(".popup__image");
-const profile__title = document.querySelector(".profile__title");
-const profile__description = document.querySelector(".profile__description");
+const popupTypeImage = document.querySelector(".popup_type_image");
+const popupTypeImageСaption = popupTypeImage.querySelector(".popup__caption");
+const popupTypeImageImage = popupTypeImage.querySelector(".popup__image");
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
 
-export { profile__title, profile__description };
+const popupTypeEdit = document.querySelector(".popup_type_edit");
+const inputOne = popupTypeEdit.querySelector("input:nth-of-type(1)");
+const inputTwo = popupTypeEdit.querySelector("input:nth-of-type(2)");
+
+export { profileTitle, profileDescription };
 
 // Функция добавления слушателя открытия  и закрытия popup по кнопкам
 
@@ -32,8 +35,13 @@ function addPopupOpenCloseEventListeners(buttonOpenClass, popupMainClass) {
   const closeButton = popupMainDiv.querySelector(".popup__close");
 
   openButton.addEventListener("click", function () {
+    if (popupMainDiv.classList.contains("popup_type_edit")) {
+      inputOne.value = profileTitle.textContent;
+      inputTwo.value = profileDescription.textContent;
+    }
     openModal(popupMainDiv);
   });
+
   closeButton.addEventListener("click", function () {
     closeModal();
   });
@@ -74,15 +82,15 @@ function createPopupCallBackFunction(evt) {
   const image = card.querySelector(".card__image");
   const title = card.querySelector(".card__title");
 
-  popup_type_image__caption.textContent = title.textContent;
-  popup_type_image__image.alt = image.alt;
-  popup_type_image__image.src = image.src;
-  openModal(popup_type_image);
-  addpopupCloseToEscEventListeners();
+  popupTypeImageСaption.textContent = title.textContent;
+  popupTypeImageImage.alt = image.alt;
+  popupTypeImageImage.src = image.src;
+  openModal(popupTypeImage);
+}
 
-  popup_type_image
-    .querySelector(".popup__close")
-    .addEventListener("click", closeModal);
+function addCallBackForImageClose() {
+  const imgClose = popupTypeImage.querySelector(".popup__close");
+  imgClose.addEventListener("click", closeModal);
 }
 
 // Вывод карточек
@@ -90,14 +98,15 @@ addAllCards(initialCards);
 
 addPopupOpenCloseEventListeners(".profile__edit-button", ".popup_type_edit");
 addPopupOpenCloseEventListeners(".profile__add-button", ".popup_type_new-card");
+addCallBackForImageClose();
 
 //  обработка submit для формы изменения профиля
 const formElementEditProfile = document.forms.edit_profile;
 
 formElementEditProfile.addEventListener("submit", (evt) => {
   evt.preventDefault();
-  profile__title.textContent = formElementEditProfile.name.value;
-  profile__description.textContent = formElementEditProfile.description.value;
+  profileTitle.textContent = formElementEditProfile.name.value;
+  profileDescription.textContent = formElementEditProfile.description.value;
   closeModal();
 });
 

@@ -1,45 +1,30 @@
-export {
-  openModal,
-  closeModal,
-  addpopupCloseToEscEventListeners,
-  removepopupCloseToEscEventListeners,
-};
-import { profile__title, profile__description } from "../index.js";
-
-const popup_type_edit = document.querySelector(".popup_type_edit");
-const input_one = popup_type_edit.querySelector("input:nth-of-type(1)");
-const input_two = popup_type_edit.querySelector("input:nth-of-type(2)");
+export { openModal, closeModal, addPopupCloseToEscEventListeners };
 
 const page = document.querySelector(".page");
 
 function openModal(popupMainDiv) {
   popupMainDiv.classList.add("popup_is-opened");
-
-  if (popupMainDiv.classList.contains("popup_type_edit")) {
-    input_one.value = profile__title.textContent;
-    input_two.value = profile__description.textContent;
-  }
-  addpopupCloseToEscEventListeners();
+  addPopupCloseToEscEventListeners();
 }
 
 function closeModal() {
   const pop = document.querySelector(".popup_is-opened");
   if (pop !== null) {
     pop.classList.remove("popup_is-opened");
-    removepopupCloseToEscEventListeners();
+    removePopupCloseToEscEventListeners();
   }
 }
 
 // Функции добавления / удаления слушателя закрытия по ESCkey
 
-function addpopupCloseToEscEventListeners() {
+function addPopupCloseToEscEventListeners() {
   page.addEventListener("keydown", closePopupOnClickOnEscCallBack);
   setTimeout(function () {
     page.addEventListener("click", closePopupOnClickOnОverlayCallBack);
   }, 50);
 }
 
-function removepopupCloseToEscEventListeners(evt) {
+function removePopupCloseToEscEventListeners() {
   page.removeEventListener("keydown", closePopupOnClickOnEscCallBack);
   page.removeEventListener("click", closePopupOnClickOnОverlayCallBack);
 }
