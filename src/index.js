@@ -8,9 +8,15 @@ import {
 } from "./components/card.js";
 import {
   openModal,
-  closeModal,
-  addPopupCloseToEscEventListeners,
+  closeModal
 } from "./components/modal.js";
+
+import {
+  maimfunc
+  
+} from "./components/validation.js";
+
+
 
 //  DOM узлы
 
@@ -127,5 +133,10 @@ formElementAddCard.addEventListener("submit", (evt) => {
   formElementAddCard.reset();
   closeModal();
 });
+
+
+
+maimfunc();
+
 
 ///////////////////////////////
