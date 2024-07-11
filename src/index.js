@@ -18,6 +18,12 @@ import {
 } from "./components/validation.js";
 
 
+import {
+  getUserInformation 
+
+} from "./components/api.js";
+
+
 
 const obj =
     {
@@ -31,6 +37,14 @@ const obj =
       }
 
 
+const config = {
+        baseUrl: 'https://nomoreparties.co/v1/wff-cohort-18',
+        headers: {
+          authorization: '5f6c0717-61b9-4f4a-8c74-b03867a939b6',
+          'Content-Type': 'application/json'
+        }
+      }
+      
 
 
 
@@ -42,12 +56,45 @@ const popupTypeImageСaption = popupTypeImage.querySelector(".popup__caption");
 const popupTypeImageImage = popupTypeImage.querySelector(".popup__image");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileAvatar = document.querySelector(".profile__image");
 
 const popupTypeEdit = document.querySelector(".popup_type_edit");
 const inputOne = popupTypeEdit.querySelector("input:nth-of-type(1)");
 const inputTwo = popupTypeEdit.querySelector("input:nth-of-type(2)");
 
 export { profileTitle, profileDescription };
+
+
+// функции с запросами к серверу
+
+
+function writeUserProfile(config) {
+
+ 
+
+   getUserInformation(config).then((res) => {
+    
+     //debugger
+     profileTitle.textContent = res.name;
+     profileDescription.textContent = res.about;
+     profileAvatar.src = res.avatar;
+
+      console.log(res);
+   
+  })
+  .catch((err) => {
+      console.log(`Ошибка. Запрос не выполнен: ${err}`);
+    });
+}
+
+
+writeUserProfile(config);
+
+
+
+
+
+
 
 // Функция добавления слушателя открытия  и закрытия popup по кнопкам
 
@@ -117,9 +164,16 @@ function addCallBackForImageClose() {
   imgClose.addEventListener("click", closeModal);
 }
 
-// Вывод карточек
-addAllCards(initialCards);
 
+
+
+// начинаем работать
+
+
+
+// Вывод карточек
+
+addAllCards(initialCards);
 addPopupOpenCloseEventListeners(".profile__edit-button", ".popup_type_edit");
 addPopupOpenCloseEventListeners(".profile__add-button", ".popup_type_new-card");
 addCallBackForImageClose();
@@ -153,7 +207,16 @@ formElementAddCard.addEventListener("submit", (evt) => {
 });
 
 
+// Запуск валидации форм
 enableValidation(obj);
 
 
+
+
+
 ///////////////////////////////
+
+
+
+
+// getUserInformation(config);
