@@ -12,9 +12,25 @@ import {
 } from "./components/modal.js";
 
 import {
-  maimfunc
-  
+  enableValidation,
+  clearValidation
+
 } from "./components/validation.js";
+
+
+
+const obj =
+    {
+        formSelector: '.popup__form',
+        inputSelector: '.popup__input',
+        submitButtonSelector: '.popup__button',
+        inactiveButtonClass: 'popup__button_disabled',
+        inputErrorClass: 'popup__input_type_error',
+        spanErrorClass:'.form__input-error',
+        errorClass: 'popup__error_visible'
+      }
+
+
 
 
 
@@ -45,7 +61,9 @@ function addPopupOpenCloseEventListeners(buttonOpenClass, popupMainClass) {
       inputOne.value = profileTitle.textContent;
       inputTwo.value = profileDescription.textContent;
     }
+
     openModal(popupMainDiv);
+    clearValidation(popupMainDiv, obj);
   });
 
   closeButton.addEventListener("click", function () {
@@ -135,8 +153,7 @@ formElementAddCard.addEventListener("submit", (evt) => {
 });
 
 
-
-maimfunc();
+enableValidation(obj);
 
 
 ///////////////////////////////

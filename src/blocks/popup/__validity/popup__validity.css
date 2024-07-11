@@ -4,20 +4,53 @@
     font-family: 'Inter', Arial, sans-serif;
     color:#FF0000;
     font-size: 12px;
+    font-weight: 400;
+    position: absolute;
+    
+    left:0;
+   
+}
+
+.name-input-error{
+    top: 48px;
+}
+
+.description-input-error{
+    top: 105px;
 }
 
 
-form__input_type_error{
-
-
-border-bottom: 2px solid red;
-
-
+.place_name-input-error{
+    top: 48px;
 }
 
-.form__input-error_active{
+.link-input-error{
+    top: 105px;
+}
 
-visibility: true;
+
+
+
+
+
+
+
+.popup__input_type_error{
+    border-bottom: 1px solid red;
+}
+
+.popup__error_visible{
+  visibility: true;
+}
+
+
+
+.popup__button_disabled{
+
+background-color: white;
+color:black;
+opacity: 0.2;
+border: 1px solid black;
 
 
 }
