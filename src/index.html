@@ -32,6 +32,8 @@
       © 2021 Mesto Russia
     </p>
   </footer>
+
+   <!-- Редактирование профиля -->
   <div class="popup popup_type_edit popup_is-animated">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
@@ -42,7 +44,6 @@
           placeholder="Имя" minlength="2" maxlength="40" 
           data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
           pattern="[a-zA-Zа-яёА-ЯЁ\s\-]+"
-          
           required>
         <span class="form__input-error name-input-error "></span>
         <input type="text" name="description" 
@@ -56,6 +57,8 @@
       </form>
     </div>
   </div>
+
+   <!-- Добавление нового места -->
   <div class="popup popup_type_new-card popup_is-animated">
     <div class="popup__content">
       <button type="button" class="popup__close"></button>
@@ -66,9 +69,7 @@
          class="popup__input popup__input_type_card-name" 
          placeholder="Название" 
          data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
-      
          pattern="^[a-zA-Zа-яА-ЯёЁ\-\s]+$"
-       
          required>
          <span class="form__input-error place_name-input-error "> </span>
         <input type="url" name="link" 
@@ -80,6 +81,8 @@
       </form>
     </div>
   </div>
+
+   <!-- Отдельный вывод картинки -->
   <div class="popup popup_type_image popup_is-animated">
     <div class="popup__content popup__content_content_image">
       <button type="button" class="popup__close"></button>
@@ -89,14 +92,47 @@
   </div>
 </div>
 
+
+ <!-- Форма изменения аватара -->
+<div class="popup popup_type_new-avatar popup_is-animated">
+  <div class="popup__content">
+    <button type="button" class="popup__close"></button>
+    <h3 class="popup__title">Обновить аватар</h3>
+    <form class="popup__form" name="new_avatar">
+       <input type="url" name="link" 
+       class="popup__input"
+       placeholder="Ссылка на аватар" 
+       required>
+       <span class="form__input-error link-input-error"> </span>
+      <button type="submit" class="button popup__button">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+ <!-- Форма подтверждения удаления -->
+ <div class="popup popup_type_delete-card popup_is-animated">
+  <div class="popup__content">
+    <button type="button" class="popup__close"></button>
+    <h3 class="popup__title">вы уверены?</h3>
+    <form class="popup__form" name="delete-card">
+        <button type="submit" class="button popup__button">Да</button>
+    </form>
+  </div>
+</div>
+
+
+
 <template id="card-template">
   <li class="places__item card">
     <img class="card__image" src="" alt="" />
-    <button type="button" class="card__delete-button"></button>
+    <button type="button" class="card__delete-button card__delete-button_hidden"></button>
     <div class="card__description">
       <h2 class="card__title">
       </h2>
+      <div>
       <button type="button" class="card__like-button"></button>
+       <span class="card__like-number"></span> 
+      </div>
     </div>
   </li>
 </template>

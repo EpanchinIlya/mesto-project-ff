@@ -19,7 +19,10 @@ import {
 
 
 import {
-  getUserInformation 
+   getAllData,
+   setUserInformation,
+   setNewCard,
+   deleteCardFromServer 
 
 } from "./components/api.js";
 
@@ -68,27 +71,81 @@ export { profileTitle, profileDescription };
 // функции с запросами к серверу
 
 
-function writeUserProfile(config) {
 
- 
+// получаем  данные user и карточки
+function readAllDataFromServer(config) {
 
-   getUserInformation(config).then((res) => {
+
+ Promise.all(getAllData(config)).then((res) => {
     
-     //debugger
-     profileTitle.textContent = res.name;
-     profileDescription.textContent = res.about;
-     profileAvatar.src = res.avatar;
+ 
+  profileTitle.textContent = res[0].name;
+  profileDescription.textContent = res[0].about;
+  profileAvatar.src = res[0].avatar;
+  addAllCards(res[1],res[0]._id);
+  console.log(res);
+  })
+ .catch((err) => {
+     console.log(`Ошибка. Запрос не выполнен: ${err}`);
+   }
+ )
 
-      console.log(res);
-   
+}
+
+//Обновление user data
+
+function writeUserData(config, name, about){
+
+  setUserInformation(config, name, about)
+  .then((result) => {
+
+    if((result.name === name)&&(result.about === about))   console.log("UserData записаны на сервер");
+    else {console.log("UserData НЕ записаны");} 
+
+    
   })
   .catch((err) => {
-      console.log(`Ошибка. Запрос не выполнен: ${err}`);
-    });
+    console.log(err); // выводим ошибку в консоль
+  }); 
+}
+
+//Добавление новой карточки на сервер
+
+function writeNewCard(config, card){
+
+  setNewCard(config, card.name, card.link)
+  .then((result) => {
+
+    if((result.name === card.name)&&(result.link === card.link))   console.log("Card записана на сервер");
+    else {console.log("Card НЕ записана на сервер");} 
+
+    
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  }); 
 }
 
 
-writeUserProfile(config);
+// удаление карточки
+
+// function deleteCard(config, id){
+
+//   setNewCard(config,id)
+//   .then((result) => {
+//         console.log(result);   
+//   })
+//   .catch((err) => {
+//     console.log(err); // выводим ошибку в консоль
+//   }); 
+
+
+
+// }
+
+
+readAllDataFromServer(config);
+
 
 
 
@@ -120,14 +177,15 @@ function addPopupOpenCloseEventListeners(buttonOpenClass, popupMainClass) {
 
 // Функция вывода всех карточек
 
-function addAllCards(initialCards) {
+function addAllCards(initialCards,userId) {
   initialCards.forEach((item) =>
     placesList.append(
       createCard(
         item,
         deleteCard,
         toggleLikeCallBackFunction,
-        createPopupCallBackFunction
+        createPopupCallBackFunction,
+        userId
       )
     )
   );
@@ -173,7 +231,7 @@ function addCallBackForImageClose() {
 
 // Вывод карточек
 
-addAllCards(initialCards);
+//addAllCards(initialCards);
 addPopupOpenCloseEventListeners(".profile__edit-button", ".popup_type_edit");
 addPopupOpenCloseEventListeners(".profile__add-button", ".popup_type_new-card");
 addCallBackForImageClose();
@@ -185,6 +243,7 @@ formElementEditProfile.addEventListener("submit", (evt) => {
   evt.preventDefault();
   profileTitle.textContent = formElementEditProfile.name.value;
   profileDescription.textContent = formElementEditProfile.description.value;
+  writeUserData(config, formElementEditProfile.name.value, formElementEditProfile.description.value);
   closeModal();
 });
 
@@ -202,6 +261,7 @@ formElementAddCard.addEventListener("submit", (evt) => {
   };
 
   addOneCard(card);
+  writeNewCard(config,card);
   formElementAddCard.reset();
   closeModal();
 });
