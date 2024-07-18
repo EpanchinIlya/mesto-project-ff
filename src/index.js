@@ -112,8 +112,6 @@ function writeNewCard(config, card, buttonSummit) {
     });
 }
 
-
-
 // Функция добавления слушателя открытия  и закрытия popup по кнопкам
 
 function addPopupOpenCloseEventListeners(buttonOpenClass, popupMainClass) {
@@ -196,17 +194,14 @@ function createPopupCallBackFunction(evt) {
   openModal(popupTypeImage);
 }
 
-
 function addCallBackForImageClose() {
   const imgClose = popupTypeImage.querySelector(".popup__close");
   imgClose.addEventListener("click", closeModal);
 }
 
-
 // MAIN
 
 readAllDataFromServer(config);
-
 
 addPopupOpenCloseEventListeners(".profile__edit-button", ".popup_type_edit");
 addPopupOpenCloseEventListeners(".profile__add-button", ".popup_type_new-card");
@@ -214,13 +209,10 @@ addPopupOpenCloseEventListeners(".avatar", ".popup_type_new-avatar");
 deletePopupCloseEventListener();
 addCallBackForImageClose();
 
-
 // Запуск валидации форм
 enableValidation(obj);
 
-
 // END MAIN
-
 
 
 
@@ -241,9 +233,6 @@ formElementEditProfile.addEventListener("submit", (evt) => {
   );
 });
 
-
-
-
 //  обработка submit для формы добавления карточки
 const formElementAddCard = document.forms.new_place;
 const buttonSubmitAddCard = formElementAddCard.querySelector("button");
@@ -258,9 +247,6 @@ formElementAddCard.addEventListener("submit", (evt) => {
   };
   writeNewCard(config, card, buttonSubmitAddCard);
 });
-
-
-
 
 //  обработка submit  подтверждения удаления карточки
 const formElementDeleteCard = document.forms.delete_card;
@@ -288,8 +274,6 @@ formElementDeleteCard.addEventListener("submit", (evt) => {
     });
 });
 
-
-
 //  обработка submit для формы изменения аватара
 const formElementeditAvatar = document.forms.new_avatar;
 const buttonSubmitEditAvatar = formElementeditAvatar.querySelector("button");
@@ -314,9 +298,6 @@ formElementeditAvatar.addEventListener("submit", (evt) => {
     });
 });
 
-
-
-
 // Функция переключения like карточки c запросом на сервер
 function toggleLikeCallBackFunction(evt, card) {
   addRemoveLikeCard(
@@ -337,6 +318,3 @@ function toggleLikeCallBackFunction(evt, card) {
       console.log(err); // выводим ошибку в консоль
     });
 }
-
-
-

@@ -11,8 +11,7 @@ function closeModal() {
   const pop = document.querySelector(".popup_is-opened");
 
   const inputs = pop.querySelectorAll("input");
-  inputs.forEach((item)=>item.value = '')
-  //debugger
+  inputs.forEach((item) => (item.value = ""));
   if (pop !== null) {
     pop.classList.remove("popup_is-opened");
     removePopupCloseToEscEventListeners();
@@ -23,7 +22,7 @@ function closeModal() {
 
 function addPopupCloseToEscEventListeners() {
   page.addEventListener("keydown", closePopupOnClickOnEscCallBack);
-  
+
   setTimeout(function () {
     page.addEventListener("click", closePopupOnClickOnОverlayCallBack);
   }, 50);
