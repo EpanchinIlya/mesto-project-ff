@@ -14,11 +14,14 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-    <img src="<%=require('./images/avatar.jpg')%>" alt="Аватар" class="profile__image">
+   <div class="avatar">
+      <div class="overlay"></div>
+      <img src="<%=require('./images/avatar.jpg')%>" alt="Аватар" class="profile__image">
+  </div>
       <div class="profile__info">
-        <h1 class="profile__title">Жак-Ив Кусто</h1>
+        <h1 class="profile__title"></h1>
         <button class="profile__edit-button" type="button"></button>
-        <p class="profile__description">Исследователь океана</p>
+        <p class="profile__description"></p>
       </div>
       <button class="profile__add-button" type="button"></button>
     </section>
@@ -95,15 +98,15 @@
 
  <!-- Форма изменения аватара -->
 <div class="popup popup_type_new-avatar popup_is-animated">
-  <div class="popup__content">
+  <div class="popup__content popup__content_add_avatar">
     <button type="button" class="popup__close"></button>
     <h3 class="popup__title">Обновить аватар</h3>
     <form class="popup__form" name="new_avatar">
-       <input type="url" name="link" 
+       <input type="url" name="avatar" 
        class="popup__input"
        placeholder="Ссылка на аватар" 
        required>
-       <span class="form__input-error link-input-error"> </span>
+       <span class="form__input-error avatar-input-error"> </span>
       <button type="submit" class="button popup__button">Сохранить</button>
     </form>
   </div>
@@ -111,10 +114,10 @@
 
  <!-- Форма подтверждения удаления -->
  <div class="popup popup_type_delete-card popup_is-animated">
-  <div class="popup__content">
+  <div class="popup__content popup__content_delete">
     <button type="button" class="popup__close"></button>
-    <h3 class="popup__title">вы уверены?</h3>
-    <form class="popup__form" name="delete-card">
+    <h3 class="popup__title">Вы уверены?</h3>
+    <form class="popup__form" name="delete_card">
         <button type="submit" class="button popup__button">Да</button>
     </form>
   </div>

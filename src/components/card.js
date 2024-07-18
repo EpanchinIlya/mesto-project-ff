@@ -1,9 +1,17 @@
-export { createCard, deleteCard, toggleLikeCallBackFunction };
+export { createCard,  };
+
+
+
+
+
+
+// const deleteModal = document.querySelector(".popup_type_delete-card");
+// const closeButton = deleteModal.querySelector(".popup__close");
 
 // @todo: Темплейт карточки
 
 const cardTemplate = document.querySelector("#card-template").content;
-let idCardForDelete = 0;
+
 // создание карточки
 
 function createCard(
@@ -13,6 +21,7 @@ function createCard(
   popupCallBackFunction,
   userId
 ) {
+
   const cardTemplateClone = cardTemplate.cloneNode(true);
   const cardImage = cardTemplateClone.querySelector(".card__image");
   const cardDeleteButton = cardTemplateClone.querySelector(".card__delete-button");
@@ -20,36 +29,35 @@ function createCard(
   const cardLikeNumber = cardTemplateClone.querySelector(".card__like-number");
   const cardTitle = cardTemplateClone.querySelector(".card__title");
 
+
   cardImage.src = card.link;
   cardImage.alt = card.name;
   cardTitle.textContent = card.name;
-  cardLikeNumber.textContent = card.likes.length;
 
-  if(card.owner._id === userId) {
-    cardDeleteButton.classList.remove("card__delete-button_hidden");
-    cardDeleteButton.addEventListener("click",//(card)=>{ 
-      
-     // idCardForDelete = card._id;
-      deleteCallBackFunction);
+  if(card.likes !== undefined){ // неновая карточка
+    cardLikeNumber.textContent = card.likes.length;
+    
+    if(card.owner._id === userId) {  // карточка данного юзера
+      cardDeleteButton.classList.remove("card__delete-button_hidden");
+      cardDeleteButton.addEventListener("click",()=>{deleteCallBackFunction(cardDeleteButton, card)});
+    }
+
+    if(card.likes.some((item)=>{return item._id === userId})){
+      cardLikeButton.classList.add("card__like-button_is-active");
+}
 
   }
- 
-  cardLikeButton.addEventListener("click", likeCallBackFunction);
+  else{  // новая карточка
+  cardLikeNumber.textContent = 0;
+  cardDeleteButton.classList.remove("card__delete-button_hidden");
+  cardDeleteButton.addEventListener("click",()=>{deleteCallBackFunction(cardDeleteButton, card)});
+  }
+
+  
+  cardLikeButton.addEventListener("click",(evt)=> {likeCallBackFunction(evt, card)});
   cardImage.addEventListener("click", popupCallBackFunction);
   return cardTemplateClone;
 }
 
-//  Функция удаления карточки
 
-function deleteCard(evt) {
-  debugger
-  evt.target.closest(".places__item").remove();
-
- // deleteCardFromServer
-}
-
-// Функция like карточки
-
-function toggleLikeCallBackFunction(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
-}
+ 

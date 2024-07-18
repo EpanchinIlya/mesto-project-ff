@@ -1,15 +1,16 @@
-export {getUserInformation, getAllCards, getAllData, setUserInformation, setNewCard, deleteCardFromServer };
+export {
+  getUserInformation, 
+  getAllCards, 
+  getAllData, 
+  setUserInformation, 
+  setNewCard, 
+  deleteCardFromServer, 
+  addRemoveLikeCard,
+  setUserAvatar
+ };
 
 
 
-
-// const config = {
-//     baseUrl: 'https://nomoreparties.co/v1/wff-cohort-18',
-//     headers: {
-//       authorization: '5f6c0717-61b9-4f4a-8c74-b03867a939b6',
-//       'Content-Type': 'application/json'
-//     }
-//   }
   
    const getUserInformation = (config) => {
      
@@ -93,19 +94,73 @@ export {getUserInformation, getAllCards, getAllData, setUserInformation, setNewC
 
 const deleteCardFromServer = (config, id)=>{
 
- fetch(`${config.baseUrl}/cards/`+id, 
+return fetch(`${config.baseUrl}/cards/`+id, 
     {method: 'DELETE',
       headers: config.headers
     }
   )
 .then((res) => {
     if (res.ok) {
-      console.log("Удаление прошло успешно");
+      return res.json();
+      
       }
     return Promise.reject(`Ошибка (deleteCardFromServer): ${res.status}`);
-}) 
-.catch((err) => {
-  console.log(err); // выводим ошибку в консоль
 }); 
 ;
 }
+
+
+// установка аватара
+
+const setUserAvatar = (config, link)=>{
+
+  return  fetch(`${config.baseUrl}/users/me/avatar`, 
+    {method: 'PATCH',
+      headers: config.headers,
+      body: JSON.stringify({
+               avatar: link,
+               
+      })
+
+    }
+  )
+.then((res) => {
+    if (res.ok) {
+        return res.json();
+      }
+    return Promise.reject(`Ошибка (setUserAvatar): ${res.status}`);
+});
+}
+
+
+
+
+
+
+
+
+
+// установка/ снятие лайка  
+
+const addRemoveLikeCard = (config, id, like)=>{
+
+  let _method = undefined;
+  if(like === true){_method = 'PUT'}
+  else{ _method = 'DELETE' }
+
+
+  return fetch(`${config.baseUrl}/cards/likes/`+id, 
+      {method: _method,
+        headers: config.headers
+      }
+    )
+  .then((res) => {
+      if (res.ok) {
+        return res.json();
+        
+        }
+      return Promise.reject(`Ошибка (addRemoveLikeCard): ${res.status}`);
+  }); 
+  ;
+  }
+  
