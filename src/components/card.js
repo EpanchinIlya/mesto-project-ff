@@ -1,4 +1,8 @@
-export { createCard };
+export { createCard, toggleLikeCallBackFunction };
+
+import { addRemoveLikeCard } from "./api.js";
+
+import { config } from "../index.js";
 
 const cardTemplate = document.querySelector("#card-template").content;
 
@@ -53,8 +57,26 @@ function createCard(
   }
 
   cardLikeButton.addEventListener("click", (evt) => {
-    likeCallBackFunction(evt, card);
+    likeCallBackFunction(evt, card._id, cardLikeNumber);
   });
   cardImage.addEventListener("click", popupCallBackFunction);
   return cardTemplateClone;
+}
+
+// Функция переключения like карточки c запросом на сервер
+function toggleLikeCallBackFunction(evt, cardId, cardLikeNumber) {
+  addRemoveLikeCard(
+    config,
+    cardId,
+    !evt.target.classList.contains("card__like-button_is-active")
+  )
+    .then((result) => {
+      if (result._id === cardId) {
+        cardLikeNumber.textContent = result.likes.length;
+        evt.target.classList.toggle("card__like-button_is-active");
+      }
+    })
+    .catch((err) => {
+      console.log(err); // выводим ошибку в консоль
+    });
 }

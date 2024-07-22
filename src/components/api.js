@@ -12,10 +12,7 @@ export {
 const getUserInformation = (config) => {
   return fetch(`${config.baseUrl}/users/me`, { headers: config.headers }).then(
     (res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка (getUserInformation): ${res.status}`);
+      return getResponseData(res);
     }
   );
 };
@@ -23,10 +20,7 @@ const getUserInformation = (config) => {
 const getAllCards = (config) => {
   return fetch(`${config.baseUrl}/cards`, { headers: config.headers }).then(
     (res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка (getAllCards): ${res.status}`);
+      return getResponseData(res);
     }
   );
 };
@@ -44,10 +38,7 @@ const setUserInformation = (config, name, about) => {
       about: about,
     }),
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка (setUserInformation): ${res.status}`);
+    return getResponseData(res);
   });
 };
 
@@ -60,10 +51,7 @@ const setNewCard = (config, name, link) => {
       link: link,
     }),
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка (setNewCard): ${res.status}`);
+    return getResponseData(res);
   });
 };
 
@@ -74,10 +62,7 @@ const deleteCardFromServer = (config, id) => {
     method: "DELETE",
     headers: config.headers,
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка (deleteCardFromServer): ${res.status}`);
+    return getResponseData(res);
   });
 };
 
@@ -91,10 +76,7 @@ const setUserAvatar = (config, link) => {
       avatar: link,
     }),
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка (setUserAvatar): ${res.status}`);
+    return getResponseData(res);
   });
 };
 
@@ -112,9 +94,15 @@ const addRemoveLikeCard = (config, id, like) => {
     method: _method,
     headers: config.headers,
   }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка (addRemoveLikeCard): ${res.status}`);
+    return getResponseData(res);
   });
 };
+
+// преобразование в json
+
+function getResponseData(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+}

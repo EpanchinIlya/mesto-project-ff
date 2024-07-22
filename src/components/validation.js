@@ -6,35 +6,57 @@ const checkInputValidity = (
   inputErrorClass,
   errorClass
 ) => {
-  const errorElement = formElement.querySelector(
-    `.${inputElement.name}-input-error`
-  );
-
   if (inputElement.validity.patternMismatch)
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   else inputElement.setCustomValidity("");
 
   if (!inputElement.validity.valid) {
-    // showInputError
-    inputElement.classList.add(inputErrorClass);
-    errorElement.textContent = inputElement.validationMessage;
-    errorElement.classList.add(errorClass);
+    showInputError(
+      formElement,
+      inputElement,
+      inputElement.validationMessage,
+      inputErrorClass,
+      errorClass
+    );
   } else {
-    // hideInputError
-    inputElement.classList.remove(inputErrorClass);
-    errorElement.classList.remove(errorClass);
-    errorElement.textContent = "";
+    hideInputError(formElement, inputElement, inputErrorClass, errorClass);
   }
+};
+
+const showInputError = (
+  formElement,
+  inputElement,
+  inputValidationMessage,
+  inputErrorClass,
+  errorClass
+) => {
+  const errorElement = formElement.querySelector(
+    `.${inputElement.name}-input-error`
+  );
+  inputElement.classList.add(inputErrorClass);
+  errorElement.textContent = inputValidationMessage;
+  errorElement.classList.add(errorClass);
+};
+
+const hideInputError = (
+  formElement,
+  inputElement,
+  inputErrorClass,
+  errorClass
+) => {
+  const errorElement = formElement.querySelector(
+    `.${inputElement.name}-input-error`
+  );
+  inputElement.classList.remove(inputErrorClass);
+  errorElement.classList.remove(errorClass);
+  errorElement.textContent = "";
+  inputElement.setCustomValidity("");
 };
 
 const enableValidation = (objVal) => {
   const formList = Array.from(document.querySelectorAll(objVal.formSelector));
 
   formList.forEach((formElement) => {
-    formElement.addEventListener("submit", function (evt) {
-      evt.preventDefault();
-    });
-
     const inputList = Array.from(
       formElement.querySelectorAll(objVal.inputSelector)
     );
@@ -71,28 +93,11 @@ const hasInvalidInput = (inputList) => {
   });
 };
 
-const clearValidation = (profileForm, objVal) => {
-  const errorList = profileForm.querySelectorAll(objVal.spanErrorClass);
-  errorList.forEach((item) => {
-    item.textContent = "";
-  });
-
-  const inputList = profileForm.querySelectorAll(objVal.inputSelector);
+const clearValidation = (formDiv, objVal) => {
+  const inputList = Array.from(formDiv.querySelectorAll(objVal.inputSelector));
   inputList.forEach((item) => {
-    item.classList.remove(objVal.inputErrorClass);
+    hideInputError(formDiv, item, objVal.inputErrorClass, objVal.errorClass);
   });
 
-  const submitButton = profileForm.querySelector(objVal.submitButtonSelector);
-
-  if (
-    Array.from(inputList).every((item) => {
-      return item.value.length > 0;
-    })
-  ) {
-    submitButton.classList.remove(objVal.inactiveButtonClass);
-    submitButton.removeAttribute("disabled");
-  } else {
-    submitButton.classList.add(objVal.inactiveButtonClass);
-    submitButton.setAttribute("disabled", true);
-  }
+  toggleButtonState(formDiv, inputList, objVal);
 };

@@ -5,13 +5,13 @@ const page = document.querySelector(".page");
 function openModal(popupMainDiv) {
   popupMainDiv.classList.add("popup_is-opened");
   addPopupCloseToEscEventListeners();
+  const form = popupMainDiv.querySelector(".popup__form");
+  form.reset();
 }
 
 function closeModal() {
   const pop = document.querySelector(".popup_is-opened");
 
-  const inputs = pop.querySelectorAll("input");
-  inputs.forEach((item) => (item.value = ""));
   if (pop !== null) {
     pop.classList.remove("popup_is-opened");
     removePopupCloseToEscEventListeners();

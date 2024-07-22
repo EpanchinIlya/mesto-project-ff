@@ -1,5 +1,5 @@
 import "./styles/index.css"; // добавьте импорт главного файла стилей
-import { createCard } from "./components/card.js";
+import { createCard, toggleLikeCallBackFunction } from "./components/card.js";
 import { openModal, closeModal } from "./components/modal.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
 import {
@@ -7,7 +7,6 @@ import {
   setUserInformation,
   setNewCard,
   deleteCardFromServer,
-  addRemoveLikeCard,
   setUserAvatar,
 } from "./components/api.js";
 
@@ -39,8 +38,10 @@ const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const profileAvatar = document.querySelector(".profile__image");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
-const inputOne = popupTypeEdit.querySelector("input:nth-of-type(1)");
-const inputTwo = popupTypeEdit.querySelector("input:nth-of-type(2)");
+const inputNameProfile = popupTypeEdit.querySelector("input:nth-of-type(1)");
+const inputDescriptionProfile = popupTypeEdit.querySelector(
+  "input:nth-of-type(2)"
+);
 const deletePopup = document.querySelector(".popup_type_delete-card");
 
 let idCardForDelete = 0;
@@ -54,11 +55,12 @@ export { profileTitle, profileDescription };
 function readAllDataFromServer(config) {
   Promise.all(getAllData(config))
     .then((res) => {
-      profileTitle.textContent = res[0].name;
-      profileDescription.textContent = res[0].about;
-      profileAvatar.src = res[0].avatar;
+      const [user, cards] = res;
+      profileTitle.textContent = user.name;
+      profileDescription.textContent = user.about;
+      profileAvatar.src = user.avatar;
       profileAvatar.classList.add("profile__image-visible");
-      addAllCards(res[1], res[0]._id);
+      addAllCards(cards, user._id);
       console.log(res);
     })
     .catch((err) => {
@@ -69,12 +71,15 @@ function readAllDataFromServer(config) {
 //Обновление user data
 
 function writeUserData(config, name, about, buttonSummit) {
-  buttonSummit.textContent = "Сохранение...";
+  writeTextOfButton(buttonSummit, "Сохранение...");
   setUserInformation(config, name, about)
     .then((result) => {
-      if (result.name === name && result.about === about)
+      if (result.name === name && result.about === about) {
+        profileTitle.textContent = result.name;
+        profileDescription.textContent = result.about;
+        closeModal();
         console.log("UserData записаны на сервер");
-      else {
+      } else {
         console.log("UserData НЕ записаны");
       }
     })
@@ -82,21 +87,20 @@ function writeUserData(config, name, about, buttonSummit) {
       console.log(err); // выводим ошибку в консоль
     })
     .finally(() => {
-      buttonSummit.textContent = "Сохранить";
-      profileTitle.textContent = formElementEditProfile.name.value;
-      profileDescription.textContent = formElementEditProfile.description.value;
-      closeModal();
+      writeTextOfButton(buttonSummit, "Сохранить");
     });
 }
 
 //Добавление новой карточки на сервер
 
 function writeNewCard(config, card, buttonSummit) {
-  buttonSummit.textContent = "Сохранение...";
+  writeTextOfButton(buttonSummit, "Сохранение...");
   setNewCard(config, card.name, card.link)
     .then((result) => {
       if (result.name === card.name && result.link === card.link) {
         card._id = result._id;
+        addOneCard(card);
+        closeModal();
         console.log("Card записана на сервер");
       } else {
         console.log("Card НЕ записана на сервер");
@@ -106,10 +110,12 @@ function writeNewCard(config, card, buttonSummit) {
       console.log(err);
     })
     .finally(() => {
-      buttonSummit.textContent = "Сохранить";
-      addOneCard(card);
-      closeModal();
+      writeTextOfButton(buttonSummit, "Сохранить");
     });
+}
+
+function writeTextOfButton(button, text) {
+  button.textContent = text;
 }
 
 // Функция добавления слушателя открытия  и закрытия popup по кнопкам
@@ -120,13 +126,13 @@ function addPopupOpenCloseEventListeners(buttonOpenClass, popupMainClass) {
   const closeButton = popupMainDiv.querySelector(".popup__close");
 
   openButton.addEventListener("click", function () {
-    if (popupMainDiv.classList.contains("popup_type_edit")) {
-      inputOne.value = profileTitle.textContent;
-      inputTwo.value = profileDescription.textContent;
-    }
-
     openModal(popupMainDiv);
     clearValidation(popupMainDiv, obj);
+
+    if (popupMainDiv.classList.contains("popup_type_edit")) {
+      inputNameProfile.value = profileTitle.textContent;
+      inputDescriptionProfile.value = profileDescription.textContent;
+    }
   });
 
   closeButton.addEventListener("click", function () {
@@ -188,10 +194,10 @@ function createPopupCallBackFunction(evt) {
   const image = card.querySelector(".card__image");
   const title = card.querySelector(".card__title");
 
+  openModal(popupTypeImage);
   popupTypeImageСaption.textContent = title.textContent;
   popupTypeImageImage.alt = image.alt;
   popupTypeImageImage.src = image.src;
-  openModal(popupTypeImage);
 }
 
 function addCallBackForImageClose() {
@@ -213,9 +219,6 @@ addCallBackForImageClose();
 enableValidation(obj);
 
 // END MAIN
-
-
-
 
 // обработка submit-ов
 
@@ -259,6 +262,7 @@ formElementDeleteCard.addEventListener("submit", (evt) => {
       if (result.message === "Пост удалён") {
         if (cardDeleteButton !== undefined) {
           cardDeleteButton.closest(".places__item").remove();
+          closeModal();
           idCardForDelete = 0;
         }
         console.log("Карточка удалена");
@@ -269,9 +273,7 @@ formElementDeleteCard.addEventListener("submit", (evt) => {
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
     })
-    .finally(() => {
-      closeModal();
-    });
+    .finally(() => {});
 });
 
 //  обработка submit для формы изменения аватара
@@ -280,12 +282,12 @@ const buttonSubmitEditAvatar = formElementeditAvatar.querySelector("button");
 
 formElementeditAvatar.addEventListener("submit", (evt) => {
   evt.preventDefault();
-
-  buttonSubmitEditAvatar.textContent = "Сохранение...";
+  writeTextOfButton(buttonSubmitEditAvatar, "Сохранение...");
   setUserAvatar(config, formElementeditAvatar.avatar.value)
     .then((result) => {
       if (result.avatar === formElementeditAvatar.avatar.value) {
         profileAvatar.src = result.avatar;
+        closeModal();
       }
       console.log(result);
     })
@@ -293,28 +295,6 @@ formElementeditAvatar.addEventListener("submit", (evt) => {
       console.log(err); // выводим ошибку в консоль
     })
     .finally(() => {
-      buttonSubmitEditAvatar.textContent = "Сохранить";
-      closeModal();
+      writeTextOfButton(buttonSubmitEditAvatar, "Сохранить");
     });
 });
-
-// Функция переключения like карточки c запросом на сервер
-function toggleLikeCallBackFunction(evt, card) {
-  addRemoveLikeCard(
-    config,
-    card._id,
-    !evt.target.classList.contains("card__like-button_is-active")
-  )
-    .then((result) => {
-      if (result._id === card._id) {
-        evt.target
-          .closest(".card__description")
-          .querySelector(".card__like-number").textContent =
-          result.likes.length;
-        evt.target.classList.toggle("card__like-button_is-active");
-      }
-    })
-    .catch((err) => {
-      console.log(err); // выводим ошибку в консоль
-    });
-}
