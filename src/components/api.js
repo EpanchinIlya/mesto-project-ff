@@ -9,6 +9,9 @@ export {
   setUserAvatar,
 };
 
+
+
+
 const getUserInformation = (config) => {
   return fetch(`${config.baseUrl}/users/me`, { headers: config.headers }).then(
     (res) => {
@@ -16,6 +19,9 @@ const getUserInformation = (config) => {
     }
   );
 };
+
+
+
 
 const getAllCards = (config) => {
   return fetch(`${config.baseUrl}/cards`, { headers: config.headers }).then(
