@@ -1,10 +1,14 @@
-export { createCard, toggleLikeCallBackFunction };
-
 import { addRemoveLikeCard } from "./api.js";
 
-import { config } from "../index.js";
-
 const cardTemplate = document.querySelector("#card-template").content;
+
+const config = {
+  baseUrl: "https://nomoreparties.co/v1/wff-cohort-18",
+  headers: {
+    authorization: "5f6c0717-61b9-4f4a-8c74-b03867a939b6",
+    "Content-Type": "application/json",
+  },
+};
 
 // создание карточки
 
@@ -80,3 +84,5 @@ function toggleLikeCallBackFunction(evt, cardId, cardLikeNumber) {
       console.log(err); // выводим ошибку в консоль
     });
 }
+
+export { createCard, toggleLikeCallBackFunction, config };

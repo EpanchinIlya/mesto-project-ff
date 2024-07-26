@@ -1,5 +1,9 @@
 import "./styles/index.css"; // добавьте импорт главного файла стилей
-import { createCard, toggleLikeCallBackFunction } from "./components/card.js";
+import {
+  createCard,
+  toggleLikeCallBackFunction,
+  config,
+} from "./components/card.js";
 import { openModal, closeModal } from "./components/modal.js";
 import { enableValidation, clearValidation } from "./components/validation.js";
 import {
@@ -20,14 +24,6 @@ const obj = {
   errorClass: "popup__error_visible",
 };
 
-export const config = {
-  baseUrl: "https://nomoreparties.co/v1/wff-cohort-18",
-  headers: {
-    authorization: "5f6c0717-61b9-4f4a-8c74-b03867a939b6",
-    "Content-Type": "application/json",
-  },
-};
-
 //  DOM узлы
 
 const placesList = document.querySelector(".places__list");
@@ -46,8 +42,6 @@ const deletePopup = document.querySelector(".popup_type_delete-card");
 
 let idCardForDelete = 0;
 let cardDeleteButton = undefined;
-
-export { profileTitle, profileDescription };
 
 // функции с запросами к серверу
 
@@ -124,8 +118,10 @@ function addPopupOpenCloseEventListeners(buttonOpenClass, popupMainClass) {
   const openButton = document.querySelector(buttonOpenClass);
   const popupMainDiv = document.querySelector(popupMainClass);
   const closeButton = popupMainDiv.querySelector(".popup__close");
+  const form = popupMainDiv.querySelector(".popup__form");
 
   openButton.addEventListener("click", function () {
+    if (form !== undefined) form.reset();
     openModal(popupMainDiv);
     clearValidation(popupMainDiv, obj);
 
@@ -208,7 +204,6 @@ function addCallBackForImageClose() {
 // MAIN
 
 readAllDataFromServer(config);
-
 addPopupOpenCloseEventListeners(".profile__edit-button", ".popup_type_edit");
 addPopupOpenCloseEventListeners(".profile__add-button", ".popup_type_new-card");
 addPopupOpenCloseEventListeners(".avatar", ".popup_type_new-avatar");
@@ -272,8 +267,7 @@ formElementDeleteCard.addEventListener("submit", (evt) => {
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
-    })
-    .finally(() => {});
+    });
 });
 
 //  обработка submit для формы изменения аватара

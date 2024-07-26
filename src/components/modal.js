@@ -1,12 +1,8 @@
-export { openModal, closeModal, addPopupCloseToEscEventListeners };
-
 const page = document.querySelector(".page");
 
 function openModal(popupMainDiv) {
   popupMainDiv.classList.add("popup_is-opened");
   addPopupCloseToEscEventListeners();
-  const form = popupMainDiv.querySelector(".popup__form");
-  form.reset();
 }
 
 function closeModal() {
@@ -45,4 +41,4 @@ function closePopupOnClickOnОverlayCallBack(evt) {
   if (evt.target.closest(".popup__content") === null) closeModal();
 }
 
-//===========================================================================================
+export { openModal, closeModal, addPopupCloseToEscEventListeners };

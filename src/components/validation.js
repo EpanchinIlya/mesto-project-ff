@@ -1,5 +1,3 @@
-export { enableValidation, clearValidation };
-
 const checkInputValidity = (
   formElement,
   inputElement,
@@ -47,6 +45,7 @@ const hideInputError = (
   const errorElement = formElement.querySelector(
     `.${inputElement.name}-input-error`
   );
+
   inputElement.classList.remove(inputErrorClass);
   errorElement.classList.remove(errorClass);
   errorElement.textContent = "";
@@ -101,3 +100,5 @@ const clearValidation = (formDiv, objVal) => {
 
   toggleButtonState(formDiv, inputList, objVal);
 };
+
+export { enableValidation, clearValidation };
